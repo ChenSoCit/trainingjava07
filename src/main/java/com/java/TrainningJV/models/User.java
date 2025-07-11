@@ -23,5 +23,5 @@ public class User {
     private String address;
     private Date createdAt;
     private Date updatedAt;
-    private Long role;
+    private Long roleId;
 }

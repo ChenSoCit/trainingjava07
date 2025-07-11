@@ -1,18 +1,33 @@
-version: '3.8'
 
+  # postgres:
+  #   image: postgres
+  #   container_name: postgres-container
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123456
+  #     POSTGRES_DB: test_db
+  #     PGDATA: /data/postgres
+  #   volumes:
+  #     - postgres:/data/postgres
+  #     - ./initdb.sql:/docker-entrypoint-initdb.d/init.sql
+  #   ports:
+  #     - '6432:5432'
+  #   networks:
+  #     - my_network
+version: "3.9"
 services:
-  postgres:
-    image: postgres:17
-    container_name: postgres_container
-    restart: always
+  app:
+    build: .
+    container_name: spring-boot-app
     environment:
-      POSTGRES_DB: test_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/test_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "8080:8080"
+    networks:
+      - my_network
 
-volumes:
-  postgres_data:
+networks:
+  my_network:

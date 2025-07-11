@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 .dateOfBirth(Date.valueOf(userRequest.getDateOfBirth()))
                 .gender(userRequest.getGender())
                 .phoneNumber(userRequest.getPhoneNumber())
-                .role(userRequest.getRoleId())
+                .roleId(userRequest.getRoleId())
                 .build();
 
         int result = userMapper.createUser(users);
@@ -65,17 +65,18 @@ public class UserServiceImpl implements UserService {
         if (existingUser == null) {
             throw new RuntimeException("User not found with id: " + id);
         }
-
         User updatedUser = User.builder()
-                .id(id)
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
-                .address(userRequest.getAddress())
-                .gender(userRequest.getGender())
-                .dateOfBirth(Date.valueOf(userRequest.getDateOfBirth()))
-                .build(); 
+            .id(id)
+            .firstName(userRequest.getFirstName())
+            .lastName(userRequest.getLastName())
+            .email(userRequest.getEmail())
+            .password(userRequest.getPassword())
+            .address(userRequest.getAddress())
+            .gender(userRequest.getGender())
+            .dateOfBirth(Date.valueOf(userRequest.getDateOfBirth()))
+            .roleId(userRequest.getRoleId())  // Thêm dòng này!
+            .build(); 
+
         return userMapper.updateUser(updatedUser);
     }
 

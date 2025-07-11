@@ -38,5 +38,5 @@ public class UserRequest {
     @NotNull(message = "Address is required")
     private String address;
 
-    private long  roleId;
+    private Long  roleId;
 }
