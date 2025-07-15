@@ -15,7 +15,7 @@
   #     - '6432:5432'
   #   networks:
   #     - my_network
-version: "3.9"
+
 services:
   app:
     build: .

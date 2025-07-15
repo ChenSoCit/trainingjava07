@@ -1,31 +1,47 @@
 package com.java.TrainningJV.mappers;
 
-import com.java.TrainningJV.dtos.response.RoleCountResponse;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import com.java.TrainningJV.models.User;
 
+import com.java.TrainningJV.models.User;
+import com.java.TrainningJV.models.UserExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper {
-    User getUserById(@Param("id") Long id);
+   
+    long countByExample(UserExample example);
 
-    User findByEmail(String email);
+    
+    int deleteByExample(UserExample example);
 
-    int createUser(User user);
+    // delete user by id
+    int deleteByPrimaryKey(Integer id);
 
-    int updateUser(User user);
+    // create a new user
+    int insert(User row);
 
-    int deleteUser(@Param("id") Long id);
+    
+    int insertSelective(User row);
 
+    
+    List<User> selectByExample(UserExample example);
 
-    List<User> getUserNoneRole();
+    // select user detail by id
+    User selectByPrimaryKey(Integer id);
 
-    List<User> getUserRole(@Param("roleId") Long roleId);
+    
+    int updateByExampleSelective(@Param("row") User row, @Param("example") UserExample example);
 
-    List<RoleCountResponse> countUserRole();
+    
+    int updateByExample(@Param("row") User row, @Param("example") UserExample example);
 
-    List<User> getAllUsers();
+    
+    int updateByPrimaryKeySelective(User row);
+
+    // update user detail by id
+    int updateByPrimaryKey(User row);
+
+    
 
 }

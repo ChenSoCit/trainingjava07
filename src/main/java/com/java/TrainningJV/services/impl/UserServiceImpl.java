@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.mappers.UserMapper;
+import com.java.TrainningJV.mappers.UserMapperCustom;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.UserService;
 
@@ -21,11 +22,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final UserMapperCustom userMapperCustom;
 
 	@Override
-	public User getUser(Long id) {
+	public User getUser(Integer id) {
 		log.info("calling getUser with id: {}", id);
-        User user = userMapper.getUserById(id);
+        User user = userMapper.selectByPrimaryKey(id);
         if (user == null) {
             log.warn("User with id {} not found", id);
             return null;
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	}
 
     @Override
-    public long createUser(UserRequest userRequest) {
+    public int createUser(UserRequest userRequest) {
         log.info("Creating user with request: {}", userRequest);
         User users = User.builder()
                 .firstName(userRequest.getFirstName())
@@ -45,11 +47,11 @@ public class UserServiceImpl implements UserService {
                 .address(userRequest.getAddress())
                 .dateOfBirth(Date.valueOf(userRequest.getDateOfBirth()))
                 .gender(userRequest.getGender())
-                .phoneNumber(userRequest.getPhoneNumber())
+                .phone(userRequest.getPhoneNumber())
                 .roleId(userRequest.getRoleId())
                 .build();
 
-        int result = userMapper.createUser(users);
+        int result = userMapper.insert(users);
         if (result > 0) {
             log.info("User created successfully: {}", users);
             return users.getId(); // Assuming the ID is set after creation
@@ -59,9 +61,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateUser(Long id, UserRequest userRequest) {
+    public int updateUser(Integer id, UserRequest userRequest) {
         log.info("Updating user with id: {} and request: {}", id, userRequest);
-        User existingUser = userMapper.getUserById(id);
+        User existingUser = userMapper.selectByPrimaryKey(id);
         if (existingUser == null) {
             throw new RuntimeException("User not found with id: " + id);
         }
@@ -72,53 +74,54 @@ public class UserServiceImpl implements UserService {
             .email(userRequest.getEmail())
             .password(userRequest.getPassword())
             .address(userRequest.getAddress())
+            .phone(userRequest.getPhoneNumber())
             .gender(userRequest.getGender())
             .dateOfBirth(Date.valueOf(userRequest.getDateOfBirth()))
             .roleId(userRequest.getRoleId())  // Thêm dòng này!
             .build(); 
 
-        return userMapper.updateUser(updatedUser);
+        return userMapper.updateByPrimaryKey(updatedUser);
     }
 
     @Override
-    public int deleteUser(Long id) {
+    public int deleteUser(Integer id) {
     log.info("Deleting user with id: {}", id);
 
-    User existingUser = userMapper.getUserById(id);
+    User existingUser = userMapper.selectByPrimaryKey(id);
     if (existingUser == null) {
         throw new RuntimeException("User not found with id: " + id);
     }
 
-    int deletedRows = userMapper.deleteUser(id);
+    int deletedRows = userMapper.deleteByPrimaryKey(id);
     if (deletedRows <= 0) {
         throw new RuntimeException("Failed to delete user with id: " + id);
     }
 
     log.info("User deleted successfully with id: {}", id);
     return deletedRows;
-}
+    }
 
     @Override
     public List<User> getUserNoneRole() {
         log.info("calling getUserNoneRole");
-        return userMapper.getUserNoneRole();
+        return userMapperCustom.getUserNoneRole();
     }
 
     @Override
-    public List<User> getUserRole(Long roleId) {
+    public List<User> getUserRole(Integer roleId) {
         log.info("calling getUserRole with roleId: {}", roleId);
-        return userMapper.getUserRole(roleId);
+        return userMapperCustom.getUserRole(roleId);
     }
 
     @Override
     public List<RoleCountResponse> getRoleCount() {
         log.info("calling getRoleCount");
-        return userMapper.countUserRole();
+        return userMapperCustom.countUserRole();
     }
 
-    @Override
-    public List<User> getAllUsers(int page, int size) {
-        return List.of();
-    }
+    // @Override
+    // public List<User> getAllUsers(int page, int size) {
+    //     return List.of();
+    // }
 
 }

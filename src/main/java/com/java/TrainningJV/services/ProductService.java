@@ -4,9 +4,12 @@ import com.java.TrainningJV.dtos.request.ProductRequest;
 import com.java.TrainningJV.models.Product;
 
 public interface ProductService {
-    Product getProductById(Long id);
+    Product getProductById(Integer id);
 
-    long addProduct(ProductRequest productRequest);
+    Integer addProduct(ProductRequest productRequest);
 
-    void deleteProduct(Long id);
+    void deleteProduct(Integer id);
+
+    int updateProduct(Integer id, ProductRequest productRequest);
+
 }

@@ -8,30 +8,36 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ProductMapper {
-
+    
     long countByExample(ProductExample example);
 
+    
     int deleteByExample(ProductExample example);
 
-    //delete by id
-    int deleteByPrimaryKey(Long id);
+    
+    int deleteByPrimaryKey(Integer id);
 
-    // insert
-    int insert(Product product);
+    
+    int insert(Product row);
 
-
+    
     int insertSelective(Product row);
 
+    
     List<Product> selectByExample(ProductExample example);
 
-    // get product by id
-    Product selectByPrimaryKey(Long id);
+    
+    Product selectByPrimaryKey(Integer id);
 
+    
     int updateByExampleSelective(@Param("row") Product row, @Param("example") ProductExample example);
 
+   
     int updateByExample(@Param("row") Product row, @Param("example") ProductExample example);
 
+   
     int updateByPrimaryKeySelective(Product row);
 
+    
     int updateByPrimaryKey(Product row);
 }

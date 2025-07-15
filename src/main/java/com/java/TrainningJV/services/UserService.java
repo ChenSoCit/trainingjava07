@@ -2,25 +2,24 @@ package com.java.TrainningJV.services;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
-import com.java.TrainningJV.dtos.response.RoleCountResponse;
 import com.java.TrainningJV.models.User;
 
 import java.util.List;
 
 public interface  UserService {
-    User getUser(Long id);
+    User getUser(Integer id);
 
-    long createUser(UserRequest userRequest);
+    int createUser(UserRequest userRequest);
 
-    int updateUser(Long id, UserRequest userRequest);
+    int updateUser(Integer id, UserRequest userRequest);
 
-    int deleteUser(Long id);
+    int deleteUser(Integer id);
 
     List<User> getUserNoneRole();
 
-    List<User> getUserRole(Long roleId);
+    List<User> getUserRole(Integer roleId);
 
     List<RoleCountResponse> getRoleCount();
 
-    List<User> getAllUsers(int page, int size);
+    // List<User> getAllUsers(int page, int size);
 }

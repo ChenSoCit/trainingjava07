@@ -6,21 +6,31 @@
     <context id="PostgreSQLContext" targetRuntime="MyBatis3">
         <!-- Kết nối DB -->
         <jdbcConnection driverClass="org.postgresql.Driver"
-                        connectionURL="jdbc:postgresql://localhost:5432/test_db"
+                        connectionURL="jdbc:postgresql://172.27.176.1:5432/test_db"
                         userId="postgres"
                         password="123456" />
 
         <!-- Sinh Model -->
-        <javaModelGenerator targetPackage="com.java.TrainningJV.models" targetProject="src/main/java" />
+        <javaModelGenerator targetPackage="com.java.TrainningJV.models"
+                            targetProject="src/main/java">
+            <property name="trimStrings" value="false"/>
+        </javaModelGenerator>
 
         <!-- Sinh XML Mapper -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources" />
+        <sqlMapGenerator targetPackage="mapper" 
+                         targetProject="src/main/resources">
+            <property name="overwrite" value="true"/>
+        </sqlMapGenerator>
 
         <!-- Sinh Mapper Interface -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.java.TrainningJV.mappers" targetProject="src/main/java" />
-
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.java.TrainningJV.mappers" 
+                             targetProject="src/main/java">
+        </javaClientGenerator>
+        
         <!-- Chọn bảng -->
-
         <table tableName="products" domainObjectName="Product" />
+        <table tableName="users" domainObjectName="User" />
+        <table tableName="roles" domainObjectName="Role" />
     </context>
 </generatorConfiguration>

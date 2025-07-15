@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ApiResponse getUserById(@PathVariable Long id) {
+    public ApiResponse getUserById(@PathVariable int id) {
         log.info("Fetching user details: {}", id);
 
         return ApiResponse.builder()
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/roles/{roleId}")
-    public ApiResponse getUserByRole(@PathVariable Long roleId){
+    public ApiResponse getUserByRole(@PathVariable Integer roleId){
         log.info("Fetching user by role: {}", roleId);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -64,14 +64,14 @@ public class UserController {
     public ApiResponse createUser(@Valid @RequestBody UserRequest userRequest) {
         log.info("Creating user: {}", userRequest);
         return ApiResponse.builder()
-                .status(HttpStatus.CREATED.value())
+                .status(HttpStatus.OK.value())
                 .message("User created successfully")
                 .data(userService.createUser(userRequest))
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ApiResponse updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
+    public ApiResponse updateUser(@PathVariable int id, @Valid @RequestBody UserRequest userRequest) {
         log.info("Updating user with id: {} and request: {}", id, userRequest);
         int result = userService.updateUser(id, userRequest);
         if (result > 0) {
@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse deleteUser(@PathVariable Long id) {
+    public ApiResponse deleteUser(@PathVariable int id) {
         log.info("Deleting user with id: {}", id);
         int result = userService.deleteUser(id);
         if (result > 0) {

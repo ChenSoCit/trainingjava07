@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,13 +28,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/{id}")
-    public ApiResponse getProductById(@Valid @PathVariable long id) {
+    public ApiResponse getProductById(@Valid @PathVariable int id) {
         log.info("Get product by id: {}", id);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("get product successfully")
-                .data("Product with ID: " + id + " retrieved successfully")
-                // .data(productService.getProductById(id))
+                .data(productService.getProductById(id))
                 .build();
     }
 
@@ -41,20 +41,31 @@ public class ProductController {
     public ApiResponse createProduct(@Valid @RequestBody ProductRequest productRequest) {
         log.info("Create product: {}", productRequest);
         return ApiResponse.builder()
-                .status(HttpStatus.CREATED.value())
+                .status(HttpStatus.OK.value())
                 .message("Created product successfully")
                 .data(productService.addProduct(productRequest))
                 .build();
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse deleteProduct(@Valid @PathVariable long id) {
+    public ApiResponse deleteProduct(@PathVariable int id) {
         log.info("Delete product: {}", id);
         productService.deleteProduct(id);
         return ApiResponse.builder()
-                .status(HttpStatus.NO_CONTENT.value())
+                .status(HttpStatus.OK.value())
                 .message("Deleted product successfully")
-                .data(id)
+                .data(null)
                 .build();
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse updateProduct(@Valid @PathVariable int id, @Valid @RequestBody ProductRequest productRequest) {
+        log.info("Update product with id: {} and request: {}", id, productRequest);
+     
+            return ApiResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message("Updated product successfully")
+                    .data(productService.updateProduct(id, productRequest))
+                    .build();
     }
 }
