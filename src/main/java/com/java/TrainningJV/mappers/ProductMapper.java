@@ -1,12 +1,12 @@
 package com.java.TrainningJV.mappers;
 
-import com.java.TrainningJV.models.Product;
-import com.java.TrainningJV.models.ProductExample;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-@Mapper
+
+import com.java.TrainningJV.models.Product;
+import com.java.TrainningJV.models.ProductExample;
+
 public interface ProductMapper {
     
     long countByExample(ProductExample example);

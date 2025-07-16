@@ -29,8 +29,9 @@
         </javaClientGenerator>
         
         <!-- Chọn bảng -->
-        <table tableName="products" domainObjectName="Product" />
+        <!-- <table tableName="products" domainObjectName="Product" />
         <table tableName="users" domainObjectName="User" />
-        <table tableName="roles" domainObjectName="Role" />
+        <table tableName="roles" domainObjectName="Role" /> -->
+        <table tableName="orders" domainObjectName="Order" />
     </context>
 </generatorConfiguration>

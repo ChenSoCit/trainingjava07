@@ -1,13 +1,13 @@
 package com.java.TrainningJV.mappers;
 
 
-import com.java.TrainningJV.models.User;
-import com.java.TrainningJV.models.UserExample;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-@Mapper
+
+import com.java.TrainningJV.models.User;
+import com.java.TrainningJV.models.UserExample;
+
 public interface UserMapper {
    
     long countByExample(UserExample example);

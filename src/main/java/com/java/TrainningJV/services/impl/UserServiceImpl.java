@@ -1,6 +1,8 @@
 package com.java.TrainningJV.services.impl;
 
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
+import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
+
 import org.springframework.stereotype.Service;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
             .phone(userRequest.getPhoneNumber())
             .gender(userRequest.getGender())
             .dateOfBirth(Date.valueOf(userRequest.getDateOfBirth()))
-            .roleId(userRequest.getRoleId())  // Thêm dòng này!
+            .roleId(userRequest.getRoleId())  
             .build(); 
 
         return userMapper.updateByPrimaryKey(updatedUser);
@@ -117,6 +119,14 @@ public class UserServiceImpl implements UserService {
     public List<RoleCountResponse> getRoleCount() {
         log.info("calling getRoleCount");
         return userMapperCustom.countUserRole();
+    }
+
+    @Override
+    public List<UserWithOrderResponse> getAllUsersWithOrders() {
+        log.info("calling getAllUsersWithOrders");
+
+        return userMapperCustom.getUsersWithOrders();
+        
     }
 
     // @Override

@@ -1,12 +1,12 @@
 package com.java.TrainningJV.mappers;
 
-import com.java.TrainningJV.models.Role;
-import com.java.TrainningJV.models.RoleExample;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-@Mapper
+
+import com.java.TrainningJV.models.Role;
+import com.java.TrainningJV.models.RoleExample;
+
 public interface RoleMapper {
     
     long countByExample(RoleExample example);

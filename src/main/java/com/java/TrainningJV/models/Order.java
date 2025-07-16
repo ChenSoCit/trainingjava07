@@ -1,55 +1,45 @@
 package com.java.TrainningJV.models;
 
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Order {
     
     private Integer id;
 
     
-    private String firstName;
+    private Integer userId;
+
+   
+    private String fullname;
 
     
-    private String lastName;
-
     private String email;
-
-    
-    private Date dateOfBirth;
-
-    
-    private String gender;
-
-
-    private String address;
-
-    
-    private Date createdAt;
-
-
-    private Date updatedAt;
 
     
     private String phone;
 
     
-    private Integer roleId;
+    private String address;
 
     
-    private String password;
+    private Date orderDate;
 
-    private List<Order> orders;
+    
+    private String status;
 
+    
+    private BigDecimal totalMoney;
+
+    
 }

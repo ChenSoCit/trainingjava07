@@ -44,4 +44,37 @@
         GROUP BY r.id, r.name
         ORDER BY r.id;
     </select>
+
+     <resultMap id="userWithOrderResultMap" type="com.java.TrainningJV.dtos.response.UserWithOrderResponse">
+        <id property="userId" column="user_id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="roleId" column="role_id"/>
+        
+        <collection property="orders" ofType="com.java.TrainningJV.dtos.response.OrderResponseToUser">
+            <id property="orderId" column="order_id"/>
+            <result property="totalMoney" column="total_money"/>
+            <result property="orderDate" column="order_date"/>
+        </collection>
+    </resultMap>
+
+    <select id="getUsersWithOrders" resultMap="userWithOrderResultMap">
+        SELECT 
+            u.id AS user_id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.phone,
+            u.address,
+            u.role_id,
+            o.id AS order_id,
+            o.total_money,
+            o.order_date
+        FROM users u
+        LEFT JOIN orders o ON u.id = o.user_id
+        ORDER BY u.id, o.id
+    </select> 
 </mapper>

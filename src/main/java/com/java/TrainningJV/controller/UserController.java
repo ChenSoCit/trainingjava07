@@ -60,6 +60,16 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/all-with-orders")
+    public ApiResponse getAllUserWithOrder(){
+        log.info("Fetching all users with orders");
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("get all users with orders")
+                .data(userService.getAllUsersWithOrders())
+                .build();
+    }
+
     @PostMapping("")
     public ApiResponse createUser(@Valid @RequestBody UserRequest userRequest) {
         log.info("Creating user: {}", userRequest);

@@ -2,12 +2,12 @@ package com.java.TrainningJV.mappers;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
+import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
 import com.java.TrainningJV.models.User;
-@Mapper
+
 public interface UserMapperCustom {
 
     // find user by email
@@ -21,4 +21,7 @@ public interface UserMapperCustom {
 
     // Đếm số lượng user theo từng role
     List<RoleCountResponse> countUserRole();
+
+    // Lấy tất cả người dùng kèm theo đơn hàng
+    List<UserWithOrderResponse> getUsersWithOrders();
 }
