@@ -1,11 +1,14 @@
 package com.java.TrainningJV.services.impl;
 
-import com.java.TrainningJV.dtos.response.RoleCountResponse;
-import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
+import java.sql.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
+import com.java.TrainningJV.dtos.response.RoleCountResponse;
+import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
 import com.java.TrainningJV.mappers.UserMapper;
 import com.java.TrainningJV.mappers.UserMapperCustom;
 import com.java.TrainningJV.models.User;
@@ -13,9 +16,6 @@ import com.java.TrainningJV.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.sql.Date;
-import java.util.List;
 
 
 @Service
@@ -127,6 +127,24 @@ public class UserServiceImpl implements UserService {
 
         return userMapperCustom.getUsersWithOrders();
         
+    }
+
+    @Override
+    @Transactional()
+    public User getUserWithOrders(Integer id) {
+        log.info("calling getUserWithOrders with id: {}", id);
+        User existingUser = userMapper.selectByPrimaryKey(id);
+        if (existingUser == null) {
+            log.warn("User with id {} not found", id);
+            return null;
+        }
+        User userWithOrders = userMapperCustom.getUserWithOrders(id);
+        if (userWithOrders == null) {
+            log.warn("User with orders for id {} not found", id);
+            return null;
+        }
+        return  userWithOrders;
+
     }
 
     // @Override

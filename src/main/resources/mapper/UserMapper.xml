@@ -3,19 +3,26 @@
 <mapper namespace="com.java.TrainningJV.mappers.UserMapper">
 
   <resultMap id="BaseResultMap" type="com.java.TrainningJV.models.User">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="first_name" jdbcType="VARCHAR" property="firstName" />
-    <result column="last_name" jdbcType="VARCHAR" property="lastName" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="date_of_birth" jdbcType="DATE" property="dateOfBirth" />
-    <result column="gender" jdbcType="VARCHAR" property="gender" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
-    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="role_id" jdbcType="INTEGER" property="roleId" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-  </resultMap>
+    <id column="id" property="id" />
+    <result column="first_name" property="firstName" />
+    <result column="last_name" property="lastName" />
+    <result column="email" property="email" />
+    <result column="date_of_birth" property="dateOfBirth" />
+    <result column="gender" property="gender" />
+    <result column="address" property="address" />
+    <result column="created_at" property="createdAt" />
+    <result column="updated_at" property="updatedAt" />
+    <result column="phone" property="phone" />
+    <result column="role_id" property="roleId" />
+    <result column="password" property="password" />
+
+    <!-- ánh xạ 1-1 với bảng roles -->
+    <association property="role" javaType="com.java.TrainningJV.models.Role">
+        <id column="role_id" property="id" />
+        <result column="role_name" property="name" />
+    </association>
+</resultMap>
+
 
   <sql id="Example_Where_Clause">
 
@@ -101,11 +108,15 @@
 
   <!-- select user detail by id -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from users
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    SELECT 
+        u.id, u.first_name, u.last_name, u.email, u.date_of_birth, u.gender,
+        u.address, u.created_at, u.updated_at, u.phone, u.role_id, u.password,
+        r.name AS role_name
+    FROM users u
+    LEFT JOIN roles r ON u.role_id = r.id
+    WHERE u.id = #{id,jdbcType=INTEGER}
+</select>
+
 
   <!-- delete user by id -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

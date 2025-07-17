@@ -21,7 +21,7 @@ public class Order {
     private Integer userId;
 
    
-    private String fullname;
+    private String fullName;
 
     
     private String email;

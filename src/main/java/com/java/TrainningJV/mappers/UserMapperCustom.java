@@ -24,4 +24,6 @@ public interface UserMapperCustom {
 
     // Lấy tất cả người dùng kèm theo đơn hàng
     List<UserWithOrderResponse> getUsersWithOrders();
+    // Lấy  người dùng  kèm theo đơn hàng theo id
+    User getUserWithOrders(Integer id);
 }

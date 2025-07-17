@@ -5,17 +5,30 @@
 
 <mapper namespace="com.java.TrainningJV.mappers.UserMapperCustom">
     <resultMap id="userResultMap" type="com.java.TrainningJV.models.User">
-        <id property="id" column="id"/>
+        <id property="id" column="user_id"/>
         <result property="firstName" column="first_name"/>
         <result property="lastName" column="last_name"/>
-        <result property="email" column="email"/>
+        <result property="email" column="user_email"/>
         <result property="dateOfBirth" column="date_of_birth"/>
         <result property="gender" column="gender"/>
-        <result property="address" column="address"/>
+        <result property="address" column="user_address"/>
         <result property="roleId" column="role_id"/> 
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="phone" column="phone"/>
+        <result property="password" column="password"/>
+
+        <collection property="orders" ofType="com.java.TrainningJV.models.Order">
+            <id property="id" column="order_id"/>
+            <result property="userId" column="user_order_id"/>
+            <result property="fullName" column="fullname"/>
+            <result property="address" column="order_address"/>
+            <result property="email" column="order_email"/>
+            <result property="phone" column="order_phone"/>
+            <result property="totalMoney" column="total_money"/>
+            <result property="orderDate" column="order_date"/>
+            <result property="status" column="status"/>
+        </collection>    
     </resultMap>
 
     <select id="findByEmail" parameterType="String" resultMap="userResultMap" >
@@ -25,14 +38,14 @@
     </select>
 
     <select id="getUserNoneRole" resultMap="userResultMap">
-        SELECT u.id, u.first_name, u.last_name, u.email, u.date_of_birth, u.gender, u.address, u.phone, u.role_id, u.created_at, u.updated_at
+        SELECT u.id, u.first_name, u.last_name, u.email, u.date_of_birth, u.gender, u.address AS user_address, u.phone, u.role_id, u.created_at, u.updated_at
         FROM users u
         LEFT JOIN roles r ON u.role_id = r.id
         WHERE r.id IS NULL
     </select>
 
     <select id="getUserRole" resultMap="userResultMap">
-        SELECT u.id, u.first_name, u.last_name, u.email, u.date_of_birth, u.gender, u.address, u.phone, u.role_id, u.created_at, u.updated_at
+        SELECT u.id AS user_id, u.first_name, u.last_name, u.email AS user_email, u.date_of_birth, u.gender, u.address AS user_address, u.password,  u.phone, u.role_id, u.created_at, u.updated_at
         FROM users u
         WHERE u.role_id = #{roleId}
     </select>
@@ -43,6 +56,18 @@
         LEFT JOIN users u ON u.role_id = r.id
         GROUP BY r.id, r.name
         ORDER BY r.id;
+    </select>
+
+
+    <!-- get user with order by id -->
+    <select id="getUserWithOrders" parameterType="Integer" resultMap="userResultMap">
+        SELECT 
+            u.id AS user_id,
+            u.first_name, u.last_name, u.email AS user_email, u.date_of_birth, u.gender, u.address AS user_address, u.phone, u.role_id, u.password ,u.created_at, u.updated_at,
+            o.id AS order_id , o.user_id AS user_order_id, o.fullname, o.address AS order_address, o.total_money, o.order_date, o.status
+        FROM users u
+        LEFT JOIN orders o ON u.id = o.user_id
+        WHERE u.id = #{id}
     </select>
 
      <resultMap id="userWithOrderResultMap" type="com.java.TrainningJV.dtos.response.UserWithOrderResponse">
