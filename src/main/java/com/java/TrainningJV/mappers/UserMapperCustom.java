@@ -24,6 +24,13 @@ public interface UserMapperCustom {
 
     // Lấy tất cả người dùng kèm theo đơn hàng
     List<UserWithOrderResponse> getUsersWithOrders();
+
     // Lấy  người dùng  kèm theo đơn hàng theo id
     User getUserWithOrders(Integer id);
+
+    // Lấy tất cả người dùng với phân trang
+    List<User> getAllUsers(@Param("offset") int page, @Param("size") int size);
+
+    // count user
+    int countTotalUsers();
 }

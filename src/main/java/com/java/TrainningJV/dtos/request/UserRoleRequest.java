@@ -1,7 +1,7 @@
 package com.java.TrainningJV.dtos.request;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserRequest {
-    @NotNull(message = "First name is required")
+public class UserRoleRequest {
+     @NotNull(message = "First name is required")
     private String firstName;
 
     @NotNull(message = "Last name is required")
@@ -33,11 +33,13 @@ public class UserRequest {
     private String gender;
 
     @NotNull(message = "Phone number is required")
-    @Pattern(regexp = "^(0[3|5|7|8|9])[0-9]{8}$", message = "phone number is invalid")
     private String phoneNumber;
 
     @NotNull(message = "Address is required")
     private String address;
+    
+    @NotNull(message = "Role name is required")
+    private String  roleName; 
 
-    private int  roleId;
+    private int roleId;
 }

@@ -3,7 +3,9 @@ package com.java.TrainningJV.services;
 import java.util.List;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
+import com.java.TrainningJV.dtos.request.UserRoleRequest;
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
+import com.java.TrainningJV.dtos.response.UserPageResponse;
 import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
 import com.java.TrainningJV.models.User;
 
@@ -29,5 +31,7 @@ public interface  UserService {
     // get user with orders by id
     User getUserWithOrders(Integer id);
 
-    // List<User> getAllUsers(int page, int size);
+    UserPageResponse getAllUsers(int page, int size);
+
+    int addUserRole(UserRoleRequest userRoleRequest);
 }

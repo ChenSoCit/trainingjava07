@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ProductRequest implements Serializable {
+    
     private String nameProduct;
 
     private String description;

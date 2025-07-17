@@ -58,6 +58,12 @@
         ORDER BY r.id;
     </select>
 
+    <!-- count user -->
+    <select id="countTotalUsers" resultType="int">
+    SELECT COUNT(*) FROM users
+    </select>
+
+
 
     <!-- get user with order by id -->
     <select id="getUserWithOrders" parameterType="Integer" resultMap="userResultMap">
@@ -102,4 +108,38 @@
         LEFT JOIN orders o ON u.id = o.user_id
         ORDER BY u.id, o.id
     </select> 
+
+    <resultMap id="userPage" type="com.java.TrainningJV.models.User">
+        <id property="id" column="user_id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="email" column="user_email"/>
+        <result property="dateOfBirth" column="date_of_birth"/>
+        <result property="gender" column="gender"/>
+        <result property="address" column="user_address"/>
+        <result property="roleId" column="role_id"/> 
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="phone" column="phone"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <select id="getAllUsers" resultMap="userPage">
+    SELECT 
+        u.id AS user_id,
+        u.first_name,
+        u.last_name,
+        u.email AS user_email,
+        u.date_of_birth,
+        u.gender,
+        u.address AS user_address,
+        u.role_id,
+        u.created_at,
+        u.updated_at,
+        u.phone,
+        u.password
+    FROM users u
+    LIMIT #{size} OFFSET #{offset}
+    </select>
+
 </mapper>

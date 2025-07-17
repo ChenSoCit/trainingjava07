@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
+import com.java.TrainningJV.dtos.request.UserRoleRequest;
 import com.java.TrainningJV.dtos.response.ApiResponse;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.UserService;
@@ -29,7 +30,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ApiResponse getUserById(@PathVariable int id) {
+    public ApiResponse getUserById(@PathVariable Integer id) {
         log.info("Fetching user details: {}", id);
 
         return ApiResponse.builder()
@@ -40,14 +41,14 @@ public class UserController {
     }
 
 
-    @GetMapping("/none-role")
-    public ApiResponse getUserNoneRole(@RequestParam int page,
-                                       @RequestParam int size) {
-        log.info("Fetching user none role");
+    @GetMapping("")
+    public ApiResponse getAllUser(@RequestParam(defaultValue = "1") int page,
+                                       @RequestParam(defaultValue = "10") int size) {
+        log.info("get all user page {} size {}", page, size);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("get user none role")
-                .data(userService.getUserNoneRole())
+                .data(userService.getAllUsers(page, size))
                 .build();
     }
 
@@ -102,6 +103,18 @@ public class UserController {
                 .data(userService.createUser(userRequest))
                 .build();
     }
+
+    @PostMapping("/add-user-role")
+    public ApiResponse addUserRole(@Valid @RequestBody UserRoleRequest userRoleRequest) {
+        log.info("Adding user role: {}", userRoleRequest);
+
+        return ApiResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message("User role added successfully")
+                    .data(userService.addUserRole(userRoleRequest))
+                    .build();
+    }
+
 
     @PutMapping("/{id}")
     public ApiResponse updateUser(@PathVariable int id, @Valid @RequestBody UserRequest userRequest) {

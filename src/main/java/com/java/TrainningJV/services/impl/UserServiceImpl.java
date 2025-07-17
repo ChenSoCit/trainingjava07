@@ -7,10 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.java.TrainningJV.dtos.request.UserRequest;
+import com.java.TrainningJV.dtos.request.UserRoleRequest;
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
+import com.java.TrainningJV.dtos.response.UserPageResponse;
 import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
+import com.java.TrainningJV.exceptions.ResourceNotFoundException;
+import com.java.TrainningJV.mappers.RoleMapper;
+import com.java.TrainningJV.mappers.RoleMapperCustom;
 import com.java.TrainningJV.mappers.UserMapper;
 import com.java.TrainningJV.mappers.UserMapperCustom;
+import com.java.TrainningJV.models.Role;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.UserService;
 
@@ -24,15 +30,22 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
+    private final RoleMapperCustom roleMapperCustom;
     private final UserMapperCustom userMapperCustom;
 
 	@Override
 	public User getUser(Integer id) {
 		log.info("calling getUser with id: {}", id);
+        
+        if (id == null || id <= 0) {
+            log.warn("Invalid user id: ", id);
+            throw new IllegalArgumentException("Invalid user id: " + id);
+        }
         User user = userMapper.selectByPrimaryKey(id);
         if (user == null) {
-            log.warn("User with id {} not found", id);
-            return null;
+            log.warn("User not found with id: {}", id);
+            throw new ResourceNotFoundException("User", "id", id);
         }
         log.info("User found: {}", user);
         return user;
@@ -41,6 +54,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public int createUser(UserRequest userRequest) {
         log.info("Creating user with request: {}", userRequest);
+
+        // kiem tra hoac tao role neu chua ton tai
+
         User users = User.builder()
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
@@ -134,22 +150,72 @@ public class UserServiceImpl implements UserService {
     public User getUserWithOrders(Integer id) {
         log.info("calling getUserWithOrders with id: {}", id);
         User existingUser = userMapper.selectByPrimaryKey(id);
+        if(id == null || id <= 0){
+            log.warn("Invalid user id: ", id);
+            throw new IllegalArgumentException("Invalid user id: " + id); 
+        }
+
         if (existingUser == null) {
             log.warn("User with id {} not found", id);
-            return null;
+            throw new ResourceNotFoundException("User", "id", id);
         }
         User userWithOrders = userMapperCustom.getUserWithOrders(id);
-        if (userWithOrders == null) {
-            log.warn("User with orders for id {} not found", id);
-            return null;
-        }
         return  userWithOrders;
-
     }
 
-    // @Override
-    // public List<User> getAllUsers(int page, int size) {
-    //     return List.of();
-    // }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int addUserRole(UserRoleRequest userRoleRequest) { 
+    log.info("Adding user role with request: {}", userRoleRequest);
+        // Kiem tra role
+        Role role = roleMapperCustom.findRoleByName(userRoleRequest.getRoleName());
+        if (role == null) {
+            log.warn("Role with name {} not found", userRoleRequest.getRoleName());
+            role  = new Role();
+            role.setId(userRoleRequest.getRoleId());
+            role.setName(userRoleRequest.getRoleName());
+            roleMapper.insert(role);
+        }
+        // kiem tra email da ton tai
+        User existingUser = userMapperCustom.findByEmail(userRoleRequest.getEmail());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("Email already exists: " + userRoleRequest.getEmail());
+        }
+        
+        // Tao user moi
+        User newUser = User.builder()
+        .firstName(userRoleRequest.getFirstName())
+        .lastName(userRoleRequest.getLastName())
+        .email(userRoleRequest.getEmail())
+        .password(userRoleRequest.getPassword())
+        .address(userRoleRequest.getAddress())
+        .dateOfBirth(Date.valueOf(userRoleRequest.getDateOfBirth()))
+        .gender(userRoleRequest.getGender())
+        .phone(userRoleRequest.getPhoneNumber())
+        .roleId(role.getId())
+        .build();
+        return userMapper.insert(newUser);
+    }
+
+    @Override
+    public UserPageResponse getAllUsers(int page, int size) {
+        log.info("Fetching all users with pagination: page={}, size={}", page, size);
+
+        int offset = (page - 1) * size;
+        List<User> users = userMapperCustom.getAllUsers(offset, size);
+
+        int totalElements = userMapperCustom.countTotalUsers();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        UserPageResponse userPageResponse = new UserPageResponse();
+        userPageResponse.setPageNumber(page);
+        userPageResponse.setPageSize(size);
+        userPageResponse.setTotalElements(totalElements);
+        userPageResponse.setTotalPages(totalPages);
+        userPageResponse.setUsers(users);
+        log.info("get user successfull");
+
+        return userPageResponse;
+    }
 
 }
