@@ -119,20 +119,13 @@ public class UserController {
     @PutMapping("/{id}")
     public ApiResponse updateUser(@PathVariable int id, @Valid @RequestBody UserRequest userRequest) {
         log.info("Updating user with id: {} and request: {}", id, userRequest);
-        int result = userService.updateUser(id, userRequest);
-        if (result > 0) {
-            return ApiResponse.builder()
-                    .status(HttpStatus.OK.value())
-                    .message("User updated successfully")
-                    .data(null)
-                    .build();
-        } else {
-            return ApiResponse.builder()
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .message("User not found")
-                    .data(null)
-                    .build();
-        }
+    
+        return ApiResponse.builder()
+            .status(HttpStatus.OK.value())
+            .message("User updated successfully")
+            .data(userService.updateUser(id, userRequest))
+            .build();
+
     }
 
     @DeleteMapping("/{id}")

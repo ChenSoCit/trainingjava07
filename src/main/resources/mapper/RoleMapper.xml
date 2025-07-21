@@ -88,18 +88,21 @@
       order by ${orderByClause}
     </if>
   </select>
+  <!-- find role by id -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    
     select 
     <include refid="Base_Column_List" />
     from roles
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <!-- delete role by id -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    
     delete from roles
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+
   <delete id="deleteByExample" parameterType="com.java.TrainningJV.models.RoleExample">
     
     delete from roles
@@ -116,7 +119,6 @@
 
   
   <insert id="insertSelective" parameterType="com.java.TrainningJV.models.Role">
-    
     insert into roles
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

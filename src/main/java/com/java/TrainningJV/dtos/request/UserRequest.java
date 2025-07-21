@@ -1,7 +1,10 @@
 package com.java.TrainningJV.dtos.request;
+import java.util.Date;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +27,7 @@ public class UserRequest {
     private String email;
 
     @NotNull(message = "password must be not null")
+    @Size(min = 5, message = "Password minimum 5 characters " )
     private String password;
 
     @NotNull(message = "Date of birth is required")

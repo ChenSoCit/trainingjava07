@@ -6,6 +6,8 @@ public class ResourceNotFoundException extends RuntimeException {
     }
 
     public ResourceNotFoundException(String resourceName, String fieldName, Object fieldValue) {
-        super(String.format("%s User not found with id %s = %s", resourceName, fieldName, fieldValue));
+        super(String.format("%s User not found with %s = %s", resourceName, fieldName, fieldValue));
     }
+
+    
 }

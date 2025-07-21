@@ -3,6 +3,7 @@ package com.java.TrainningJV.services.impl;
 import org.springframework.stereotype.Service;
 
 import com.java.TrainningJV.dtos.request.ProductRequest;
+import com.java.TrainningJV.exceptions.ResourceNotFoundException;
 import com.java.TrainningJV.mappers.ProductMapper;
 import com.java.TrainningJV.models.Product;
 import com.java.TrainningJV.services.ProductService;
@@ -22,10 +23,10 @@ public class ProductServiceImpl implements ProductService {
         Product exitingProduct = productMapper.selectByPrimaryKey(id);
         if (exitingProduct == null) {
             log.info("Product with id: " + id + " not found");
-            return null;
+            throw new ResourceNotFoundException("Product", ":", id);
         }
-        log.info("Product with id: {} ", id );
 
+        log.info("Product with id: {} ", id );
         return exitingProduct;
     }
 
@@ -52,7 +53,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Integer id) {
         log.info("Delete product: {} ", id);
-        // Product exitingProduct = productMapper.selectByPrimaryKey(id);
+        Product exitingProduct = productMapper.selectByPrimaryKey(id);
+
+        if(exitingProduct == null){
+            log.info("Product not found: {}", id);
+            throw new ResourceNotFoundException("Product", ":", id);
+        }
         productMapper.deleteByPrimaryKey(id);
         // nt result = productMapper.deleteByPrimaryKey(id);
         // if (result > 0) {
@@ -66,11 +72,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int updateProduct(Integer id, ProductRequest productRequest) {
         log.info("Update product with id: {} and request: {}", id, productRequest);
-        // Product existingProduct = productMapper.selectByPrimaryKey(id);
-        // log.info("Existing product: {}", existingProduct);
-        // if (existingProduct == null) {
-        //     throw new RuntimeException("Product not found with id: " + id);
-        // }
+        Product existingProduct = productMapper.selectByPrimaryKey(id);
+        if (existingProduct == null) {
+           throw new ResourceNotFoundException("Product", ":", id);
+        }
         
         Product updatedProduct = Product.builder()
                 .id(id)

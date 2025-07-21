@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Service
-@Slf4j(topic = "UserServiceImpl")
+@Slf4j(topic = "USER-SERVICE")
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public int createUser(UserRequest userRequest) {
         log.info("Creating user with request: {}", userRequest);
-
         // kiem tra hoac tao role neu chua ton tai
 
         User users = User.builder()
@@ -81,9 +80,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updateUser(Integer id, UserRequest userRequest) {
         log.info("Updating user with id: {} and request: {}", id, userRequest);
+
         User existingUser = userMapper.selectByPrimaryKey(id);
         if (existingUser == null) {
-            throw new RuntimeException("User not found with id: " + id);
+            log.info("User not found id: {}", id);
+            throw new ResourceNotFoundException("User", ":",id);
         }
         User updatedUser = User.builder()
             .id(id)
@@ -107,7 +108,8 @@ public class UserServiceImpl implements UserService {
 
     User existingUser = userMapper.selectByPrimaryKey(id);
     if (existingUser == null) {
-        throw new RuntimeException("User not found with id: " + id);
+        log.info("User not found id: {}", id);
+            throw new ResourceNotFoundException("User", ":",id);
     }
 
     int deletedRows = userMapper.deleteByPrimaryKey(id);
@@ -128,6 +130,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUserRole(Integer roleId) {
         log.info("calling getUserRole with roleId: {}", roleId);
+        Role existingRole  = roleMapper.selectByPrimaryKey(roleId);
+        if(existingRole == null){
+            log.info("Role not found id: {}", roleId);
+            throw new ResourceNotFoundException("Role" ,":", roleId);
+        }
         return userMapperCustom.getUserRole(roleId);
     }
 
@@ -140,7 +147,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserWithOrderResponse> getAllUsersWithOrders() {
         log.info("calling getAllUsersWithOrders");
-
         return userMapperCustom.getUsersWithOrders();
         
     }
@@ -157,7 +163,7 @@ public class UserServiceImpl implements UserService {
 
         if (existingUser == null) {
             log.warn("User with id {} not found", id);
-            throw new ResourceNotFoundException("User", "id", id);
+            throw new ResourceNotFoundException("User", ":", id);
         }
         User userWithOrders = userMapperCustom.getUserWithOrders(id);
         return  userWithOrders;

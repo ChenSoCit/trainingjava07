@@ -21,9 +21,7 @@ public class GlobalExceptionHandling {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e, WebRequest request) {
         FieldError firstError = e.getBindingResult().getFieldErrors().get(0); // chỉ lấy lỗi đầu tiên
-
         String message = firstError.getField() + ": " + firstError.getDefaultMessage();
-
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
