@@ -27,6 +27,16 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("")
+    public ApiResponse getAllProducts() {
+        log.info("Get all products");
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Get all products")
+                .data(productService.getAllProducts())
+                .build();
+    }
+
     @GetMapping("/{id}")
     public ApiResponse getProductById(@Valid @PathVariable int id) {
         log.info("Get product by id: {}", id);

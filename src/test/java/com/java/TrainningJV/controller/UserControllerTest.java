@@ -1,16 +1,17 @@
 package com.java.TrainningJV.controller;
 
 import java.util.Date;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,8 +26,9 @@ import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.exceptions.ResourceNotFoundException;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.UserService;
-
 import lombok.extern.slf4j.Slf4j;
+
+
 @Slf4j(topic="CONTROLLER-TEST")
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -109,7 +111,7 @@ public class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(new ObjectMapper().writeValueAsString(userRequest)))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("email: Invalid email format"));
         
     verify(userService, never()).createUser(any(UserRequest.class));

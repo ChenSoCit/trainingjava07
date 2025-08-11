@@ -3,7 +3,7 @@ package com.java.TrainningJV.service;
 import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.exceptions.ResourceNotFoundException;
 import com.java.TrainningJV.mappers.UserMapper;
-import com.java.TrainningJV.mappers.UserMapperCustom;
+import com.java.TrainningJV.mappers.mapperCustom.UserMapperCustom;
 import com.java.TrainningJV.models.Role;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.impl.UserServiceImpl;
@@ -28,7 +28,7 @@ import java.util.Date;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.java.TrainningJV.mappers.RoleMapper;
-import com.java.TrainningJV.mappers.RoleMapperCustom;
+import com.java.TrainningJV.mappers.mapperCustom.RoleMapperCustom;
 
 
 @Slf4j(topic="SERVICE-TEST")

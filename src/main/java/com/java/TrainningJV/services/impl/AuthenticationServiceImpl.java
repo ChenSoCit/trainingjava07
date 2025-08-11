@@ -1,7 +1,7 @@
 package com.java.TrainningJV.services.impl;
 
 import com.java.TrainningJV.dtos.request.SignRequest;
-import com.java.TrainningJV.mappers.UserMapperCustom;
+import com.java.TrainningJV.mappers.mapperCustom.UserMapperCustom;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.AuthenticationService;
 import lombok.extern.slf4j.Slf4j;

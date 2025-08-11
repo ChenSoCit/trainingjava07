@@ -1,4 +1,4 @@
-package com.java.TrainningJV.mappers;
+package com.java.TrainningJV.mappers.mapperCustom;
 
 import java.util.List;
 

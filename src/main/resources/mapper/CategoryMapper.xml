@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.java.TrainningJV.mappers.RoleMapper">
-  <resultMap id="BaseResultMap" type="com.java.TrainningJV.models.Role">
-  
+<mapper namespace="com.java.TrainningJV.mappers.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.java.TrainningJV.models.Category">
+   
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
-
   
-  <!-- find role by id -->
+
+  <!-- select by id -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    
     select 
-    ia, name
-    from roles
+    id, name
+    from categories
     where id = #{id,jdbcType=INTEGER}
   </select>
-
-  <!-- delete role by id -->
+  <!-- delete by id -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from roles
+    
+    delete from categories
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-
-  <!-- insert role -->
-  <insert id="insert" parameterType="com.java.TrainningJV.models.Role" useGeneratedKeys="true" keyProperty="id">
-    insert into roles (id, name)
-    values (#{id,jdbcType= INTEGER},#{name,jdbcType=VARCHAR})
+  <!-- insert by id -->
+  <insert id="insert" parameterType="com.java.TrainningJV.models.Category">
+    
+    insert into categories (id, name)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
   </insert>
 
-    
 
-  <update id="updateByPrimaryKey" parameterType="com.java.TrainningJV.models.Role">
-  
-    update roles
+  <!-- update by id -->
+  <update id="updateByPrimaryKey" parameterType="com.java.TrainningJV.models.Category">
+   
+    update categories
     set name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

@@ -1,5 +1,6 @@
 package com.java.TrainningJV.services.impl;
 
+import com.java.TrainningJV.mappers.mapperCustom.ProductMapperCustom;
 import org.springframework.stereotype.Service;
 
 import com.java.TrainningJV.dtos.request.ProductRequest;
@@ -11,11 +12,20 @@ import com.java.TrainningJV.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Service
 @Slf4j(topic = "PRODUCT-SERVICE")
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
+    private final ProductMapperCustom productMapperCustom;
+
+    @Override
+    public List<Product> getAllProducts() {
+        log.info("Getting all products");
+        return productMapperCustom.getAllProducts();
+    }
 
     @Override
     public Product getProductById(Integer id) {
@@ -39,6 +49,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(productRequest.getPrice())
                 .description(productRequest.getDescription())
                 .stockQuantity(productRequest.getStockQuantity())
+                .categoryId(productRequest.getCategoryId())
                 .build();
         int result = productMapper.insert(product);  
         if(result > 0) {

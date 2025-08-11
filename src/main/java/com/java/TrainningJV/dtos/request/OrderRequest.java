@@ -1,25 +1,25 @@
-package com.java.TrainningJV.models;
+package com.java.TrainningJV.dtos.request;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
 @Builder
-public class Order {
-    
-    private Integer id;
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderRequest {
 
     
     private Integer userId;
 
     
-    private String fullName;
+    private String fullname;
 
     
     private String email;
@@ -30,14 +30,8 @@ public class Order {
    
     private String address;
 
-    
-    private Date orderDate;
-
-    
     private String status;
 
     
     private BigDecimal totalMoney;
-
-    
 }

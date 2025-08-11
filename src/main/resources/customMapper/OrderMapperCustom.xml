@@ -3,11 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.java.TrainningJV.mappers.OrderMapperCustom">
+<mapper namespace="com.java.TrainningJV.mappers.mapperCustom.OrderMapperCustom">
     <resultMap id="orderResultMap" type="com.java.TrainningJV.models.Order">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="user_id" jdbcType="INTEGER" property="userId" />
-        <result column="fullname" jdbcType="VARCHAR" property="fullname" />
+        <result column="fullname" jdbcType="VARCHAR" property="fullName" />
         <result column="email" jdbcType="VARCHAR" property="email" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
         <result column="address" jdbcType="VARCHAR" property="address" />
@@ -15,18 +15,11 @@
         <result column="status" jdbcType="VARCHAR" property="status" />
         <result column="total_money" jdbcType="NUMERIC" property="totalMoney" />
   </resultMap>
-    
 
+  <select  id="findOrderByUserId" parameterType="Integer" resultMap="orderResultMap">
+    SELECT id, user_id, fullname, email, phone, address, order_date, status, total_money
+    FROM orders
+    WHERE user_id = #{userId}
+  </select>  
 
-
-
-
-
-
-
-
-
-
-
-
-</mapper>
+  </mapper>

@@ -29,4 +29,7 @@ public class ProductRequest implements Serializable {
     @NotNull(message = "stock quantity not null")
     @Min(value = 1, message = "stock quantity must be not minimine 1")
     private int stockQuantity;
+
+    @NotNull(message = "category not null")
+    private Integer categoryId;
 }
