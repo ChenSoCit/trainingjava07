@@ -2,10 +2,7 @@ package com.java.TrainningJV.mappers;
 
 import com.java.TrainningJV.models.Category;
 
-
 public interface CategoryMapper {
-    
-
     
     int deleteByPrimaryKey(Integer id);
 
@@ -15,8 +12,10 @@ public interface CategoryMapper {
    
     int insertSelective(Category row);
 
+
     
     Category selectByPrimaryKey(Integer id);
+
 
     
     int updateByPrimaryKeySelective(Category row);

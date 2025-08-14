@@ -1,9 +1,9 @@
 package com.java.TrainningJV.services;
 
+import java.util.List;
+
 import com.java.TrainningJV.dtos.request.OrderDetailRequest;
 import com.java.TrainningJV.models.OrderDetails;
-
-import java.util.List;
 
 public interface OrderDetailService {
     OrderDetails insertOrderDetails(OrderDetailRequest request);
@@ -12,8 +12,9 @@ public interface OrderDetailService {
 
     List<OrderDetails> selectAllOrderDetails(int orderId);
 
-    long updateOrderDetails(Integer id,OrderDetailRequest request);
+    OrderDetails updateOrderDetails(Integer id, OrderDetailRequest request);
 
     void deleteByOrderId(int OrderId);
+    
     void deleteById(int id);
 }

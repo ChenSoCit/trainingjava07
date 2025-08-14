@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.dtos.request.UserRoleRequest;
 import com.java.TrainningJV.dtos.response.ApiResponse;
-import com.java.TrainningJV.models.User;
+import com.java.TrainningJV.dtos.response.UserResponse;
 import com.java.TrainningJV.services.UserService;
 
 import jakarta.validation.Valid;
@@ -85,8 +85,7 @@ public class UserController {
     @GetMapping("/users-orders/{id}")
     public ApiResponse getUserWithOrders(@PathVariable Integer id) {
         log.info("Fetching user with orders for id: {}", id);
-        User userWithOrders = userService.getUserWithOrders(id);
-        log.info("User with orders: {}", userWithOrders);
+        UserResponse userWithOrders = userService.getUserWithOrders(id);
         return ApiResponse.builder()
             .status(HttpStatus.OK.value())
             .message("User with orders fetched successfully")

@@ -1,18 +1,23 @@
 package com.java.TrainningJV.services.impl;
 
-import com.java.TrainningJV.mappers.mapperCustom.ProductMapperCustom;
+import java.util.List;
+import java.util.Locale;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.java.TrainningJV.dtos.request.ProductRequest;
+import com.java.TrainningJV.exceptions.BadRequestException;
 import com.java.TrainningJV.exceptions.ResourceNotFoundException;
+import com.java.TrainningJV.mappers.CategoryMapper;
 import com.java.TrainningJV.mappers.ProductMapper;
+import com.java.TrainningJV.mappers.mapperCustom.ProductMapperCustom;
+import com.java.TrainningJV.models.Category;
 import com.java.TrainningJV.models.Product;
 import com.java.TrainningJV.services.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Service
 @Slf4j(topic = "PRODUCT-SERVICE")
@@ -20,6 +25,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
     private final ProductMapperCustom productMapperCustom;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<Product> getAllProducts() {
@@ -33,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
         Product exitingProduct = productMapper.selectByPrimaryKey(id);
         if (exitingProduct == null) {
             log.info("Product with id: " + id + " not found");
-            throw new ResourceNotFoundException("Product", ":", id);
+            throw new ResourceNotFoundException("Product", "id", id);
         }
 
         log.info("Product with id: {} ", id );
@@ -41,22 +47,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Integer addProduct(ProductRequest productRequest) {
+    @Transactional
+    public Product addProduct(ProductRequest productRequest) {
         log.info("Add product: {} ", productRequest);
-       
-        Product product = Product.builder()
+        
+        Category exitingCategory = categoryMapper.selectByPrimaryKey(productRequest.getCategoryId());
+        if(exitingCategory == null){
+            log.info("Category with id: {} not found", productRequest.getCategoryId());
+            throw new ResourceNotFoundException("Category", "id", productRequest.getCategoryId());
+        }
+        
+        Product newProduct = Product.builder()
                 .name(productRequest.getNameProduct())
                 .price(productRequest.getPrice())
                 .description(productRequest.getDescription())
                 .stockQuantity(productRequest.getStockQuantity())
                 .categoryId(productRequest.getCategoryId())
                 .build();
-        int result = productMapper.insert(product);  
+        int result = productMapper.insert(newProduct);  
         if(result > 0) {
-            log.info("Product created successfully: {}", product);
-            return product.getId(); // Assuming the ID is set after creation
+            log.info("Product created successfully: {}", newProduct);
+            Product product = productMapper.selectByPrimaryKey(newProduct.getId());
+            return product;
         } else {
-            throw new RuntimeException("Failed to create product");
+            throw new BadRequestException("Failed to create product");
         }
     
     }
@@ -68,24 +82,18 @@ public class ProductServiceImpl implements ProductService {
 
         if(exitingProduct == null){
             log.info("Product not found: {}", id);
-            throw new ResourceNotFoundException("Product", ":", id);
+            throw new ResourceNotFoundException("Product", "id", id);
         }
         productMapper.deleteByPrimaryKey(id);
-        // nt result = productMapper.deleteByPrimaryKey(id);
-        // if (result > 0) {
-        //     log.info("Product deleted successfully");
-        // }else {
-        //     throw new RuntimeException("Product delete failed");
-        // }
-
     }
 
     @Override
-    public int updateProduct(Integer id, ProductRequest productRequest) {
+    @Transactional
+    public Product updateProduct(Integer id, ProductRequest productRequest) {
         log.info("Update product with id: {} and request: {}", id, productRequest);
         Product existingProduct = productMapper.selectByPrimaryKey(id);
         if (existingProduct == null) {
-           throw new ResourceNotFoundException("Product", ":", id);
+           throw new ResourceNotFoundException("Product", "id", id);
         }
         
         Product updatedProduct = Product.builder()
@@ -97,6 +105,13 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         
         log.info("Updated product: {}", updatedProduct);
-        return productMapper.updateByPrimaryKey(updatedProduct);
+        int rows = productMapper.updateByPrimaryKey(updatedProduct);
+        if(rows != 1) {
+            log.error("Failed to update product with id: {}", id);
+            throw new BadRequestException("Failed to update product");
+        }
+        Product productUpadate = productMapper.selectByPrimaryKey(id);
+        log.info("Product updated successfully: {}", productUpadate);
+        return productUpadate;
     }
 }

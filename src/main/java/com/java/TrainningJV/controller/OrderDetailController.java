@@ -38,11 +38,11 @@ public class OrderDetailController {
     @DeleteMapping("/{id}")
     public ApiResponse deleteOrderDetail(@PathVariable int id){
         log.info("Delete Order Detail by Order Id, {}", id);
-        orderDetailService.deleteByOrderId(id);
+        orderDetailService.deleteById(id);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("Delete Order Detail by Order Id")
-                .data(id)
+                .message("Delete Order Detail by Order Id: "+ id)
+                .data("")
                 .build();
     }
 

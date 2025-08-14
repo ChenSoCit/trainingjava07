@@ -7,7 +7,7 @@ public interface OrderMapper {
     int deleteByPrimaryKey(Integer id);
 
     
-    Order insert(Order row);
+    int insert(Order row);
 
    
     int insertSelective(Order row);

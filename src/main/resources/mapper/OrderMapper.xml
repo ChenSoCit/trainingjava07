@@ -1,63 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.java.TrainningJV.mappers.OrderMapper">
+
   <resultMap id="BaseResultMap" type="com.java.TrainningJV.models.Order">
-   
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="fullname" jdbcType="VARCHAR" property="fullname" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="order_date" jdbcType="TIMESTAMP" property="orderDate" />
-    <result column="status" jdbcType="VARCHAR" property="status" />
-    <result column="total_money" jdbcType="NUMERIC" property="totalMoney" />
+    <id     column="id"           jdbcType="INTEGER"   property="id"/>
+    <result column="user_id"      jdbcType="INTEGER"   property="userId"/>
+    <result column="fullname"     jdbcType="VARCHAR"   property="fullName"/>
+    <result column="email"        jdbcType="VARCHAR"   property="email"/>
+    <result column="phone"        jdbcType="VARCHAR"   property="phone"/>
+    <result column="address"      jdbcType="VARCHAR"   property="address"/>
+    <result column="order_date"   jdbcType="TIMESTAMP" property="orderDate"/>
+    <result column="status"       jdbcType="OTHER"     javaType="com.java.TrainningJV.models.enums.OrderStatus" property="status"/>
+    <result column="total_money"  jdbcType="NUMERIC"   property="totalMoney"/>
   </resultMap>
 
-  <!-- select by id -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    
-    select 
-    id, user_id, fullname, email, phone, address, order_date, status, total_money
+    select id, user_id, fullname, email, phone, address, order_date, status, total_money
     from orders
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <!-- delete order -->
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    
     delete from orders
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  
-
-  <!-- Insert order -->
-  <insert id="insert" parameterType="com.java.TrainningJV.models.Order" useGeneratedKeys="true" keyProperty="id">
-    
-    insert into orders ( user_id, fullname,
-      email, phone, address, 
-      order_date, status, total_money
-      )
-    values (#{userId,jdbcType=INTEGER}, #{fullname,jdbcType=VARCHAR},
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{orderDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{totalMoney,jdbcType=NUMERIC}
-      )
+  <insert id="insert" parameterType="com.java.TrainningJV.models.Order"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into orders (
+      user_id, fullname, email, phone, address, order_date, status, total_money
+    ) values (
+               #{userId,jdbcType=INTEGER},
+               #{fullName,jdbcType=VARCHAR},
+               #{email,jdbcType=VARCHAR},
+               #{phone,jdbcType=VARCHAR},
+               #{address,jdbcType=VARCHAR},
+               #{orderDate,jdbcType=TIMESTAMP},
+               #{status,javaType=com.java.TrainningJV.models.enums.OrderStatus,jdbcType=OTHER},
+               #{totalMoney,jdbcType=NUMERIC}
+             )
   </insert>
 
-  
-
-  <!-- Update order -->
   <update id="updateByPrimaryKey" parameterType="com.java.TrainningJV.models.Order">
-    
     update orders
-    set user_id = #{userId,jdbcType=INTEGER},
-      fullname = #{fullname,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      order_date = #{orderDate,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=VARCHAR},
-      total_money = #{totalMoney,jdbcType=NUMERIC}
+    set user_id     = #{userId,jdbcType=INTEGER},
+        fullname    = #{fullName,jdbcType=VARCHAR},
+        email       = #{email,jdbcType=VARCHAR},
+        phone       = #{phone,jdbcType=VARCHAR},
+        address     = #{address,jdbcType=VARCHAR},
+        order_date  = #{orderDate,jdbcType=TIMESTAMP},
+        status      = #{status,javaType=com.java.TrainningJV.models.enums.OrderStatus,jdbcType=OTHER},
+        total_money = #{totalMoney,jdbcType=NUMERIC}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 </mapper>

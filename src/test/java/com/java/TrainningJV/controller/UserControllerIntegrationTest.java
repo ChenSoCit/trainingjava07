@@ -1,5 +1,9 @@
 package com.java.TrainningJV.controller;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,30 +12,42 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+@ActiveProfiles("test") 
 public class UserControllerIntegrationTest  {
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired MockMvc mockMvc;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @Autowired JdbcTemplate jdbcTemplate;
+
+    String emailToCreate = "tra1+" + System.currentTimeMillis() + "@gmail.com";
 
     @BeforeEach
-    void setup(){
+    void setup() {
 
-         jdbcTemplate.update("DELETE FROM users");
+        jdbcTemplate.update("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+        jdbcTemplate.update("TRUNCATE TABLE roles RESTART IDENTITY CASCADE");
+
+        jdbcTemplate.update("INSERT INTO roles(id, name) VALUES (?, ?)", 3, "USER");
 
         jdbcTemplate.update("""
-            INSERT INTO users (id, first_name, last_name, email, password, date_of_birth, gender, phone, address, role_id)
-            VALUES (1, 'Tra', 'Nguyen', 'tra@gmail.com', '12345667', '1995-05-20', 'Male', '0912345678', '123 HN', 3)
-        """);
+            INSERT INTO users (first_name, last_name, email, password, date_of_birth, gender, phone, address, role_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, "Tra", "Nguyen", "tra@gmail.com", "12345667",
+            Date.valueOf(LocalDate.of(1995, 5, 20)), "Male", "0912345678", "123 HN", 3);
+}
+
+
+    @AfterEach
+    void cleanup() {
+        jdbcTemplate.update("DELETE FROM users WHERE email IN (?, ?)", "tra@gmail.com", emailToCreate);
+        // nếu có các dữ liệu khác được tạo trong test, xoá theo điều kiện tương tự
     }
 
     @Test
@@ -39,8 +55,8 @@ public class UserControllerIntegrationTest  {
         String json = """
         {
             "firstName": "Tra",
-            "lastName": "Nguyen",
-            "email": "tra1@gmail.com",
+            "lastName": "Nguyen2",
+            "email": "%s",
             "password": "12345667",
             "dateOfBirth": "1995-05-20",
             "gender": "Male",
@@ -48,7 +64,7 @@ public class UserControllerIntegrationTest  {
             "address": "123 Đường ABC, Quận Ha Dong, TP.HN",
             "roleId": 3
         }
-        """;
+        """.formatted(emailToCreate);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/users")
@@ -60,8 +76,8 @@ public class UserControllerIntegrationTest  {
 
         Integer count = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM users WHERE email = ?",
-            Integer.class,
-            "tra1@gmail.com"
+            Integer.class, emailToCreate
+            
         );
 
         assertEquals(1, count); // DB phải có đúng 1 user được insert

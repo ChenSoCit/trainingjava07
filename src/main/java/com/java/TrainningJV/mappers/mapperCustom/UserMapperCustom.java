@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
+import com.java.TrainningJV.dtos.response.UserResponse;
 import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
 import com.java.TrainningJV.models.User;
 
@@ -26,7 +27,7 @@ public interface UserMapperCustom {
     List<UserWithOrderResponse> getUsersWithOrders();
 
     // Lấy  người dùng  kèm theo đơn hàng theo id
-    User getUserWithOrders(Integer id);
+    UserResponse getUserWithOrders(@Param("id") Integer id);
 
     // Lấy tất cả người dùng với phân trang
     List<User> getAllUsers(@Param("offset") int page, @Param("size") int size);

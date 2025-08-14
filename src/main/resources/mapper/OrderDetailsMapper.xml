@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.java.TrainningJV.models.OrderDetails">
    
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_id"   jdbcType="INTEGER" property="orderId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="price" jdbcType="DOUBLE" property="price" />
     <result column="number_of_products" jdbcType="INTEGER" property="numberOfProducts" />
@@ -29,22 +29,26 @@
   </select>
 
   <!-- delete by order detail id -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-   
+  <delete id="deleteByPrimaryKey" parameterType="int">
+  
     delete from order_details
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id}
   </delete>
 
+  <!-- delete by order id -->
+  <delete id="deleteByOrderId" parameterType="int">
+  
+    delete from order_details
+    where order_id = #{orderId}
+  </delete>
 
   <!-- insert order detail -->
   <insert id="insert" parameterType="com.java.TrainningJV.models.OrderDetails" useGeneratedKeys="true" keyProperty="id">
 
-    insert into order_details (order_id, product_id,
-      price, number_of_products, total_money, 
-      color)
-    values (#{orderId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER},
-      #{price,jdbcType=DOUBLE}, #{numberOfProducts,jdbcType=INTEGER}, #{totalMoney,jdbcType=DOUBLE}, 
-      #{color,jdbcType=VARCHAR})
+    insert into order_details (order_id, product_id,price,
+       number_of_products,total_money, color)
+    values (#{orderId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{price,jdbcType=INTEGER},
+      #{numberOfProducts,jdbcType=INTEGER}, #{totalMoney,jdbcType=INTEGER},  #{color,jdbcType=VARCHAR})
   </insert>
 
   
@@ -52,12 +56,14 @@
   <update id="updateByPrimaryKey" parameterType="com.java.TrainningJV.models.OrderDetails">
   
     update order_details
-    set order_id = #{orderId,jdbcType=INTEGER},
-      product_id = #{productId,jdbcType=INTEGER},
-      price = #{price,jdbcType=DOUBLE},
-      number_of_products = #{numberOfProducts,jdbcType=INTEGER},
-      total_money = #{totalMoney,jdbcType=DOUBLE},
-      color = #{color,jdbcType=VARCHAR}
+    <set>
+      <if test="orderId != null">order_id = #{orderId},</if>
+      <if test="productId != null">product_id = #{productId},</if>
+      <if test="price != null">price = #{price},</if>
+      <if test="numberOfProducts != null">number_of_products = #{numberOfProducts},</if>
+      <if test="totalMoney != null">total_money = #{totalMoney},</if>
+      <if test="color != null">color = #{color},</if>
+    </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1,14 +1,16 @@
 package com.java.TrainningJV.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import java.time.LocalDate;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.java.TrainningJV.mappers.UserMapper;
@@ -17,13 +19,32 @@ import com.java.TrainningJV.services.UserService;
 
 @SpringBootTest
 @Transactional
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class UserServiceIntegrationTest{
     @Autowired
     private UserService userService;
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setup() {
+
+        jdbcTemplate.update("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+        jdbcTemplate.update("TRUNCATE TABLE roles RESTART IDENTITY CASCADE");
+
+        jdbcTemplate.update("INSERT INTO roles(id, name) VALUES (?, ?)", 2, "ADMIN");
+
+        jdbcTemplate.update("""
+            INSERT INTO users (first_name, last_name, email, password, date_of_birth, gender, phone, address, role_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, "Tra", "Nguyen", "tra@gmail.com", "12345667",
+            (LocalDate.of(1995, 5, 20)), "Male", "0912345678", "123 HN", 2);
+    }
+       
+
 
     @Test
     void testGetUser_ExistingId_Success() {
@@ -37,7 +58,7 @@ public class UserServiceIntegrationTest{
                 .gender("male")
                 .password("1234567")
                 .phone("0987654321")
-                .roleId(1)
+                .roleId(2)
                 .build();
 
         userMapper.insert(newUser); // ID sẽ được DB tự sinh

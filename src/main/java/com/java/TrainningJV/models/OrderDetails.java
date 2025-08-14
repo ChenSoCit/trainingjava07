@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -15,16 +17,12 @@ public class OrderDetails {
 
     private Integer productId;
 
-    
-    private Double price;
+    private BigDecimal price;
 
-    
     private Integer numberOfProducts;
-
     
-    private Double totalMoney;
+    private BigDecimal totalMoney;
 
-    
     private String color;
 
 }

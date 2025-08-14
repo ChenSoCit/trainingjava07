@@ -4,22 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.java.TrainningJV.mappers.mapperCustom.OrderMapperCustom">
+
     <resultMap id="orderResultMap" type="com.java.TrainningJV.models.Order">
-        <id column="id" jdbcType="INTEGER" property="id" />
-        <result column="user_id" jdbcType="INTEGER" property="userId" />
-        <result column="fullname" jdbcType="VARCHAR" property="fullName" />
-        <result column="email" jdbcType="VARCHAR" property="email" />
-        <result column="phone" jdbcType="VARCHAR" property="phone" />
-        <result column="address" jdbcType="VARCHAR" property="address" />
-        <result column="order_date" jdbcType="TIMESTAMP" property="orderDate" />
-        <result column="status" jdbcType="VARCHAR" property="status" />
-        <result column="total_money" jdbcType="NUMERIC" property="totalMoney" />
-  </resultMap>
+        <id     column="id"           jdbcType="INTEGER"   property="id"/>
+        <result column="user_id"      jdbcType="INTEGER"   property="userId"/>
+        <result column="fullname"     jdbcType="VARCHAR"   property="fullName"/>
+        <result column="email"        jdbcType="VARCHAR"   property="email"/>
+        <result column="phone"        jdbcType="VARCHAR"   property="phone"/>
+        <result column="address"      jdbcType="VARCHAR"   property="address"/>
+        <result column="order_date"   jdbcType="TIMESTAMP" property="orderDate"/>
+        <result column="status"       jdbcType="VARCHAR"   javaType="com.java.TrainningJV.models.enums.OrderStatus" property="status"/>
+        <result column="total_money"  jdbcType="NUMERIC"   property="totalMoney"/>
+    </resultMap>
 
-  <select  id="findOrderByUserId" parameterType="Integer" resultMap="orderResultMap">
-    SELECT id, user_id, fullname, email, phone, address, order_date, status, total_money
-    FROM orders
-    WHERE user_id = #{userId}
-  </select>  
+    <!-- Lấy danh sách order theo userId -->
+    <select id="findOrderByUserId" parameterType="java.lang.Integer" resultMap="orderResultMap">
+        SELECT id, user_id, fullname, email, phone, address, order_date, status, total_money
+        FROM orders
+        WHERE user_id = #{userId}
+    </select>
 
-  </mapper>
+    <!-- Lấy tất cả order -->
+    <select id="findAllOrder" resultMap="orderResultMap">
+        SELECT id, user_id, fullname, email, phone, address, order_date, status, total_money
+        FROM orders
+    </select>
+
+    <!-- Đếm tổng số order -->
+    <select id="countTotalOrder" resultType="int">
+        SELECT COUNT(*) FROM orders
+    </select>
+
+    <!-- Cập nhật total_money -->
+    <update id="totalMoneyOrder">
+        UPDATE orders
+        SET total_money = COALESCE(total_money, 0) + #{delta}
+        WHERE id = #{orderId}
+        <!-- COALESCE(total_money, 0): nếu NULL thì coi như 0 -->
+    </update>
+
+</mapper>

@@ -1,7 +1,9 @@
 package com.java.TrainningJV.dtos.request;
 
-import java.math.BigDecimal;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,24 +16,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequest {
-
-    
+    @NotNull(message = "user Id must be not null")
     private Integer userId;
 
-    
-    private String fullname;
+    @NotNull(message = "full name must be not null")
+    private String fullName;
 
-    
+    @NotNull(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
 
-    
+    @NotNull(message = "phone must be not null")
+    @Pattern(regexp = "^(0[3|5|7|8|9])[0-9]{8}$", message = "phone number is invalid")
     private String phone;
 
-   
+    @NotNull(message = "address must be not null")
     private String address;
 
-    private String status;
-
-    
-    private BigDecimal totalMoney;
+    private String status; 
 }

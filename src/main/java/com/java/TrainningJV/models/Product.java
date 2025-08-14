@@ -1,4 +1,5 @@
 package com.java.TrainningJV.models;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Locale.Category;
 
@@ -24,7 +25,7 @@ public class Product {
     private String description;
 
     
-    private double price;
+    private BigDecimal price;
 
     private Integer stockQuantity;
 
@@ -35,7 +36,5 @@ public class Product {
     private LocalDateTime updatedAt;
 
     private Integer categoryId;
-    
-    private Category category;
     
 }

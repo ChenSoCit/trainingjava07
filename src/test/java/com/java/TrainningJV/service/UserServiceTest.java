@@ -1,34 +1,35 @@
 package com.java.TrainningJV.service;
 
+import java.time.LocalDate;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.exceptions.ResourceNotFoundException;
+import com.java.TrainningJV.mappers.RoleMapper;
 import com.java.TrainningJV.mappers.UserMapper;
+import com.java.TrainningJV.mappers.mapperCustom.OrderMapperCustom;
+import com.java.TrainningJV.mappers.mapperCustom.RoleMapperCustom;
 import com.java.TrainningJV.mappers.mapperCustom.UserMapperCustom;
 import com.java.TrainningJV.models.Role;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.impl.UserServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.*;
-
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-import java.util.Date;
-
-
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.java.TrainningJV.mappers.RoleMapper;
-import com.java.TrainningJV.mappers.mapperCustom.RoleMapperCustom;
 
 
 @Slf4j(topic="SERVICE-TEST")
@@ -43,8 +44,10 @@ public class UserServiceTest {
     private  RoleMapperCustom roleMapperCustom;
     @Mock
     private UserMapperCustom userMapperCustom;
+    @Mock
+    private OrderMapperCustom orderMapperCustom;
 
-
+    
     private UserServiceImpl userService;
 
     private static User test1;
@@ -55,7 +58,6 @@ public class UserServiceTest {
     @BeforeAll
     static void beforeAll(){
         test1 = new User();
-
         test1.setId(1);
         test1.setFirstName("test1");
         test1.setLastName("ok");
@@ -75,7 +77,6 @@ public class UserServiceTest {
     
 
         test2 = new User();
-
         test2.setId(2);
         test2.setFirstName("test2");
         test2.setLastName("ok");
@@ -95,11 +96,10 @@ public class UserServiceTest {
 
         
         userRequest = new UserRequest();
-
         userRequest.setFirstName("tset1");
         userRequest.setLastName("ok");
         userRequest.setEmail(  "userRequest@gmail.com");
-        userRequest.setDateOfBirth("1990-1-9");
+        userRequest.setDateOfBirth(LocalDate.of(1990, 1, 1));
         userRequest.setGender("male");
         userRequest.setAddress("HN");
         userRequest.setPassword("tets2");
@@ -118,7 +118,7 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         // khoi tao buoc trien khai
-        userService = new UserServiceImpl(userMapper, roleMapper, roleMapperCustom, userMapperCustom);
+        userService = new UserServiceImpl(userMapper, roleMapper, roleMapperCustom, userMapperCustom, orderMapperCustom);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class UserServiceTest {
             userService.getUser(999);
         });
 
-        assertEquals("User User not found with id = 999", exception.getMessage());
+        assertEquals("User not found with id: 999", exception.getMessage());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class UserServiceTest {
             userService.updateUser(999, userRequest);
         });
 
-        assertEquals("User User not found with : = 999", exception.getMessage());
+        assertEquals("User not found with id: 999", exception.getMessage());
         verify(userMapper).selectByPrimaryKey(999);
         verify(userMapper, never()).updateByPrimaryKey(any(User.class));
     }
@@ -218,7 +218,7 @@ public class UserServiceTest {
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             userService.deleteUser(999);
         });
-        assertEquals("User User not found with : = 999", exception.getMessage());
+        assertEquals("User not found with id: 999", exception.getMessage());
         verify(userMapper).selectByPrimaryKey(999);
         verify(userMapper, never()).deleteByPrimaryKey(999);
     }

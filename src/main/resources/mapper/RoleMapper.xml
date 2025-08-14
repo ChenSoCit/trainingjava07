@@ -11,7 +11,7 @@
   <!-- find role by id -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
-    ia, name
+    id, name
     from roles
     where id = #{id,jdbcType=INTEGER}
   </select>

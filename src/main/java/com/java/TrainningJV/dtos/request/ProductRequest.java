@@ -1,6 +1,7 @@
 package com.java.TrainningJV.dtos.request;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -24,12 +25,11 @@ public class ProductRequest implements Serializable {
 
     @NotNull(message = "price not null")
     @Min(value = 1, message = "price must be not minimine 1")
-    private double price;
+    private BigDecimal price;
 
     @NotNull(message = "stock quantity not null")
     @Min(value = 1, message = "stock quantity must be not minimine 1")
-    private int stockQuantity;
+    private Integer stockQuantity;
 
-    @NotNull(message = "category not null")
     private Integer categoryId;
 }

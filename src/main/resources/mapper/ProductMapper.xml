@@ -9,6 +9,7 @@
     <result column="stock_quantity" jdbcType="INTEGER" property="stockQuantity" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
   </resultMap>
 
 
@@ -21,7 +22,8 @@
       price,
       stock_quantity,
       created_at,
-      updated_at
+      updated_at,
+      category_id
     from products
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -36,8 +38,8 @@
   <!-- create product  -->
   <insert id="insert" parameterType="com.java.TrainningJV.models.Product"
         useGeneratedKeys="true" keyProperty="id">
-  INSERT INTO products (name, description, price, stock_quantity)
-  VALUES (#{name}, #{description}, #{price}, #{stockQuantity})
+  INSERT INTO products (name, description, price, stock_quantity, category_id)
+  VALUES (#{name}, #{description}, #{price}, #{stockQuantity}, #{categoryId})
  
 </insert>
 

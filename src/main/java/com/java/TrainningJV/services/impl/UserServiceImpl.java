@@ -10,12 +10,15 @@ import com.java.TrainningJV.dtos.request.UserRequest;
 import com.java.TrainningJV.dtos.request.UserRoleRequest;
 import com.java.TrainningJV.dtos.response.RoleCountResponse;
 import com.java.TrainningJV.dtos.response.UserPageResponse;
+import com.java.TrainningJV.dtos.response.UserResponse;
 import com.java.TrainningJV.dtos.response.UserWithOrderResponse;
 import com.java.TrainningJV.exceptions.ResourceNotFoundException;
 import com.java.TrainningJV.mappers.RoleMapper;
-import com.java.TrainningJV.mappers.mapperCustom.RoleMapperCustom;
 import com.java.TrainningJV.mappers.UserMapper;
+import com.java.TrainningJV.mappers.mapperCustom.OrderMapperCustom;
+import com.java.TrainningJV.mappers.mapperCustom.RoleMapperCustom;
 import com.java.TrainningJV.mappers.mapperCustom.UserMapperCustom;
+import com.java.TrainningJV.models.Order;
 import com.java.TrainningJV.models.Role;
 import com.java.TrainningJV.models.User;
 import com.java.TrainningJV.services.UserService;
@@ -33,13 +36,14 @@ public class UserServiceImpl implements UserService {
     private final RoleMapper roleMapper;
     private final RoleMapperCustom roleMapperCustom;
     private final UserMapperCustom userMapperCustom;
+    private final OrderMapperCustom orderMapperCustom;
 
 	@Override
 	public User getUser(Integer id) {
 		log.info("calling getUser with id: {}", id);
         
         if (id == null || id <= 0) {
-            log.warn("Invalid user id: ", id);
+            log.warn("Invalid user id: {}", id);
             throw new IllegalArgumentException("Invalid user id: " + id);
         }
         User user = userMapper.selectByPrimaryKey(id);
@@ -84,7 +88,7 @@ public class UserServiceImpl implements UserService {
         User existingUser = userMapper.selectByPrimaryKey(id);
         if (existingUser == null) {
             log.info("User not found id: {}", id);
-            throw new ResourceNotFoundException("User", ":",id);
+            throw new ResourceNotFoundException("User", "id",id);
         }
         User updatedUser = User.builder()
             .id(id)
@@ -109,7 +113,7 @@ public class UserServiceImpl implements UserService {
     User existingUser = userMapper.selectByPrimaryKey(id);
     if (existingUser == null) {
         log.info("User not found id: {}", id);
-            throw new ResourceNotFoundException("User", ":",id);
+        throw new ResourceNotFoundException("User", "id",id);
     }
 
     int deletedRows = userMapper.deleteByPrimaryKey(id);
@@ -153,20 +157,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional()
-    public User getUserWithOrders(Integer id) {
+    public UserResponse getUserWithOrders(Integer id) {
         log.info("calling getUserWithOrders with id: {}", id);
         User existingUser = userMapper.selectByPrimaryKey(id);
         if(id == null || id <= 0){
-            log.warn("Invalid user id: ", id);
+            log.info("Invalid user id: {} ", id);
             throw new IllegalArgumentException("Invalid user id: " + id); 
         }
 
         if (existingUser == null) {
             log.warn("User with id {} not found", id);
-            throw new ResourceNotFoundException("User", ":", id);
+            throw new ResourceNotFoundException("User", "id", id);
         }
-        User userWithOrders = userMapperCustom.getUserWithOrders(id);
-        return  userWithOrders;
+    
+        Role role = roleMapper.selectByPrimaryKey(existingUser.getRoleId());
+
+        List<Order> orders = orderMapperCustom.findOrderByUserId(existingUser.getId());
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUserId(existingUser.getId());
+        userResponse.setFirstName(existingUser.getFirstName());
+        userResponse.setLastName(existingUser.getLastName());
+        userResponse.setEmail(existingUser.getEmail());
+        userResponse.setDateOfBirth(existingUser.getDateOfBirth());
+        userResponse.setGender(existingUser.getGender());
+        userResponse.setAddress(existingUser.getAddress());
+        userResponse.setCreatedAt(existingUser.getCreatedAt());
+        userResponse.setUpdatedAt(existingUser.getUpdatedAt());
+        userResponse.setPhone(existingUser.getPhone());
+        userResponse.setPassword(existingUser.getPassword());
+        userResponse.setRoleName(role.getName());
+        userResponse.setOrders(orders);
+        
+        return  userResponse;
     }
 
     @Override
